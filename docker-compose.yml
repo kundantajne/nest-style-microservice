@@ -1,0 +1,36 @@
+services:
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: mssql
+    environment:
+      SA_PASSWORD: "YourStrong!Passw0rd"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    volumes:
+      - mssql-data:/var/opt/mssql    # 🧠 MSSQL stores DB files here
+    networks:
+      - app-net
+
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - DB_USER=sa
+      - DB_PASSWORD=YourStrong!Passw0rd
+      - DB_SERVER=db
+      - DB_NAME=TestDB
+      - PORT=3000
+    depends_on:
+      - db
+    networks:
+      - app-net
+
+volumes:
+  mssql-data:   # 🧠 this will persist DB files even after stopping
+    driver: local
+
+networks:
+  app-net:
+    driver: bridge
