@@ -14,6 +14,7 @@ const createUser = async (name, email) => {
 
 const getAllUsers = async () => {
   const result = await sql.query`SELECT * FROM users`;
+  const x = result;
   return result.recordset.map(row => new User(row));
 };
 
